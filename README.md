@@ -14,23 +14,62 @@ Below are the tasks we want you to complete.
 
 
 ## Get started
+#### Pre-requisite
+Run the script `connect-downloader.sh` under the `scripts` folder. The script will download, the source and sink
+connectors and put it under the `plugins` folder. The repo currently has the latest version of the connectors downloaded.
 
-Run 
+
+#### Start Docker Containers
+Run
 
 ```
-docker-compose up -d
+docker-compose --compatibility up -d
 ```
 
-to start a Kakfa cluster. 
+to start a Kakfa cluster, Kafka Connect Cluster and Opensearch services.
+
+Once the services and containers are up and healthy (give about a minute), especially the `connect cluster` containers,
+run the `register-connector.sh` under the `scripts` folder, so that the source and sink connectors gets registered to the
+kafka connect cluster. Make sure the port on the script matches with one of the kafka connect containers, otherwise
+modify the script to match any one of the containers.
+
+Run the below command, to view the available connectors. Check if both the required source and sink connectors are
+available.
+`curl http://localhost:8083/connector-plugins | jq .`
+
+Once registered the input file will be processed immediately, and you can find all the records being processed and
+published to the Opensearch node within few seconds.
+
+You can execute the below query on the [Opensearch dashboard](http://localhost:5601/app/dev_tools#/console)
+`
+GET cdc-events/_search
+{
+"query": {
+"match_all": {}
+}
+}
+`
+to verify that all the 726 records has been published to Opensearch.
+
+
 
 The cluster is accessible locally at `localhost:9092` or `kafka:29092` for services running inside the container network.
 
-
 You can also access Kafka-UI at `localhost:8080` to examine the ingested Kafka messages.
 
-Opensearch is accessible locally at `localhost:9200` or `opensearch-node:9200` 
+Opensearch is accessible locally at `localhost:9200` or `opensearch-node:9200`
 for services running inside the container network.
 
+### Kafka Connect
+Kafka Connect is started in distributed mode with 2 nodes.
+
+#### a) FilePulse Source Connector
+Processes the input jsonl file and pushes the cdc events to kafka topic `cdc-events`.
+
+#### b) Opensearch Sink Connector
+Processes the events from the `cdc-events` kafka topic and publishes to opensearch index `cdc-events`
+
+### Opensearch
 You can validate Opensearch is working by running sample queries
 
 Insert
@@ -74,13 +113,15 @@ curl localhost:9200/cdc/_search  | python -m json.tool
 }
 ```
 
+#### Teardown services
+
 Run
 
 ```
-docker-compose down
+docker-compose --compatibility down
 ```
 
-to tear down all the services. 
+to tear down all the services.
 
 ## Resources
 

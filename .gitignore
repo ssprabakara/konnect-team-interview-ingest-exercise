@@ -1,0 +1,8 @@
+target/
+*.class
+*.iml
+.idea/
+*.project
+*.DS_STORE
+lib/hash*
+.java-version
