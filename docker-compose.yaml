@@ -1,30 +1,40 @@
-version: '3.7'
+version: '3.8'
 
 services:
   kafka-ui:
-    image: provectuslabs/kafka-ui
+    image: provectuslabs/kafka-ui:v0.7.2
     container_name: kafka-ui
     ports:
       - "8080:8080"
     restart: always
+    networks:
+      - konnect-observability-net
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:7.8.0
+    container_name: zookeeper
     ports:
-    - "2181:2181"
+      - "2181:2181"
+    restart: always
+    networks:
+      - konnect-observability-net
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: kafka
     depends_on:
-    - zookeeper
+      - zookeeper
+    restart: always
     ports:
-    - "9092:9092"
+      - "9092:9092"
+    networks:
+      - konnect-observability-net
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -40,9 +50,12 @@ services:
       KAFKA_MESSAGE_MAX_BYTES: '200000000'
 
   init-kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: init-kafka
     depends_on:
       - kafka
+    networks:
+      - konnect-observability-net
     entrypoint: [ '/bin/sh', '-c' ]
     command: |
       "
@@ -53,9 +66,33 @@ services:
       kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic cdc-events --replication-factor 1 --partitions 1
       "
 
+  kafka-connect-distributed:
+    image: apache/kafka:3.7.0
+    #container_name: connect-distributed
+    ports:
+      - "8083-8085:8083"
+    command:
+      - bash
+      - -c
+      - /opt/kafka/bin/connect-distributed.sh /opt/kafka/config/connect-distributed.properties
+    deploy:
+      replicas: 2
+    networks:
+      - konnect-observability-net
+    restart: always
+    depends_on:
+      - init-kafka
+    volumes:
+      - "./properties/connect-distributed.properties:/opt/kafka/config/connect-distributed.properties"
+      - "./plugins/opensearch-connector:/opt/kafka/plugins/opensearch-connector"
+      - "./plugins/filepulse-connector:/opt/kafka/plugins/filepulse-connector"
+      - "./input:/tmp/kafka-connect/input"
+
   opensearch-node:
-    image: opensearchproject/opensearch:latest
+    image: opensearchproject/opensearch:2.18.0
     container_name: opensearch-node
+    networks:
+      - konnect-observability-net
     environment:
       - cluster.name=opensearch-cluster
       - node.name=opensearch-node
@@ -72,22 +109,32 @@ services:
       nofile:
         soft: 65536
         hard: 65536
+    restart: always
     volumes:
-      - opensearch-data:/usr/share/opensearch/data
+      - opensearch-node-data:/usr/share/opensearch/data
     ports:
       - "9200:9200" # REST API
       - "9600:9600" # Performance Analyzer
 
   opensearch-dashboards:
-    image: opensearchproject/opensearch-dashboards:latest
+    image: opensearchproject/opensearch-dashboards:2.18.0
     container_name: opensearch-dashboards
+    networks:
+      - konnect-observability-net
     ports:
       - "5601:5601"
     expose:
       - "5601"
+    restart: always
     environment:
       - 'OPENSEARCH_HOSTS=["http://opensearch-node:9200"]'
       - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
 
 volumes:
-  opensearch-data:
+  opensearch-node-data:
+    driver: local
+    name: opensearch-node-data
+
+networks:
+  konnect-observability-net:
+    name: konnect-observability-net

@@ -1,0 +1,24 @@
+{
+  "name": "filepulse-source",
+  "config": {
+    "connector.class": "io.streamthoughts.kafka.connect.filepulse.source.FilePulseSourceConnector",
+    "file.filter.regex.pattern": "^?!.*\\.jsonl?$",
+    "filters": "ParseJSON",
+    "filters.ParseJSON.type": "io.streamthoughts.kafka.connect.filepulse.filter.JSONFilter",
+    "filters.ParseJSON.source": "message",
+    "filters.ParseJSON.merge": "true",
+    "fs.cleanup.policy.class": "io.streamthoughts.kafka.connect.filepulse.fs.clean.LogCleanupPolicy",
+    "fs.listing.class": "io.streamthoughts.kafka.connect.filepulse.fs.LocalFSDirectoryListing",
+    "fs.listing.directory.path": "/tmp/kafka-connect/input/",
+    "fs.scan.directory.path": "/tmp/kafka-connect/input/",
+    "fs.scan.filters": "io.streamthoughts.kafka.connect.filepulse.scanner.local.filter.RegexFileListFilter",
+    "fs.scan.interval.ms": "10000",
+    "internal.kafka.reporter.bootstrap.servers": "kafka:29092",
+    "internal.kafka.reporter.topic": "connect-file-pulse-status",
+    "tasks.reader.class": "io.streamthoughts.kafka.connect.filepulse.fs.reader.LocalRowFileInputReader",
+    "tasks.file.status.storage.bootstrap.servers": "kafka:29092",
+    "tasks.max": 1,
+    "offset.strategy": "name",
+    "topic": "cdc-events"
+  }
+}
