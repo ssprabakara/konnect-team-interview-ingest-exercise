@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import konnect.config.AppConfig;
 import konnect.opensearch.OpensearchPublisher;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,35 +24,37 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_RECORDS_
 import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
 
-public class KConsumer {
-    Properties kafkaProps;
-    KafkaConsumer<String, String> consumer;
-    OpensearchPublisher opensearchPublisher;
-    ExecutorService executorService;
+public class KafkaConsumerClient {
+    private final ExecutorService executorService;
+    private final AppConfig appConfig;
+    private final Thread mainThread;
+    private final OpensearchPublisher opensearchPublisher;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KConsumer.class);
+    private KafkaConsumer<String, String> consumer;
+    private Properties kafkaProps;
 
-    public static final String KAFKA_TOPIC = "cdc-events";
-    public static final String KAFKA_CONSUMER_GROUP_ID = "cdc-events-consumer";
-    public final Thread mainThread = Thread.currentThread();
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerClient.class);
 
-    public KConsumer() {
+    public KafkaConsumerClient(final AppConfig appConfig) {
+        this.appConfig = appConfig;
+        this.mainThread = Thread.currentThread();
+
         setProperties();
         buildConsumer();
-        subscribeToTopic(KAFKA_TOPIC);
-        opensearchPublisher = new OpensearchPublisher();
-        executorService = Executors.newFixedThreadPool(2);
+        subscribeToTopic(appConfig.getTopicName());
+        opensearchPublisher = new OpensearchPublisher(appConfig);
+        executorService = Executors.newFixedThreadPool(2); // need to add to config ???
         addShutdownHook();
     }
 
     private void setProperties() {
         kafkaProps = new Properties();
-        kafkaProps.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        kafkaProps.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        kafkaProps.put(VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        kafkaProps.put(AUTO_OFFSET_RESET_CONFIG, "earliest");
-        kafkaProps.put(MAX_POLL_RECORDS_CONFIG, 500);
-        kafkaProps.put(GROUP_ID_CONFIG, KAFKA_CONSUMER_GROUP_ID);
+        kafkaProps.put(BOOTSTRAP_SERVERS_CONFIG, appConfig.getConsumerBootstrapServers());
+        kafkaProps.put(KEY_DESERIALIZER_CLASS_CONFIG, appConfig.getKeyDeserializer());
+        kafkaProps.put(VALUE_DESERIALIZER_CLASS_CONFIG, appConfig.getValueDeserializer());
+        kafkaProps.put(AUTO_OFFSET_RESET_CONFIG, appConfig.getAutoOffsetReset());
+        kafkaProps.put(MAX_POLL_RECORDS_CONFIG, appConfig.getMaxPollRecords());
+        kafkaProps.put(GROUP_ID_CONFIG, appConfig.getGroupId());
     }
 
     private void buildConsumer() {

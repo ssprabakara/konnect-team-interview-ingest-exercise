@@ -1,0 +1,35 @@
+{
+  "settings": [
+    "master"
+  ],
+  "kafkaTopic": {
+    "topicName": "cdc-events"
+  },
+  "kafkaProducer": {
+    "acks": "all",
+    "batchSize": 1048576,
+    "bootstrapServers": ["localhost:9092"],
+    "keySerializer": "org.apache.kafka.common.serialization.StringSerializer",
+    "valueSerializer": "org.apache.kafka.connect.json.JsonSerializer"
+  },
+  "kafkaConsumer": {
+    "autoOffsetReset": "earliest",
+    "bootstrapServers": ["localhost:9092"],
+    "groupId": "cdc-events-consumer",
+    "keyDeserializer": "org.apache.kafka.common.serialization.StringSerializer",
+    "maxPollRecords": 500,
+    "valueDeserializer": "org.apache.kafka.common.serialization.StringSerializer"
+  },
+  "httpClient": {
+    "connectTimeout": 10,
+    "keepAliveDuration": 30,
+    "maxIdleConnections": 50,
+    "readTimeout": 30,
+    "writeTimeout": 10
+  },
+  "opensearch": {
+    "indexName": "cdc-events",
+    "postRequestUrl": "http://localhost:9200/cdc-events/_doc/",
+    "bulkPostRequestUrl": "http://localhost:9200/cdc-events/_bulk/"
+  }
+}

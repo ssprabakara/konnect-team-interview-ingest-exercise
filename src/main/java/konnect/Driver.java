@@ -1,8 +1,10 @@
 package konnect;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import konnect.kafka.consumer.KConsumer;
-import konnect.kafka.producer.KProducer;
+import konnect.config.ConfigReader;
+import konnect.config.AppConfig;
+import konnect.kafka.consumer.KafkaConsumerClient;
+import konnect.kafka.producer.KafkaProducerClient;
 import konnect.util.Utils;
 
 import java.io.BufferedReader;
@@ -11,11 +13,13 @@ import java.io.IOException;
 
 public class Driver {
     public static final String INPUT_FILE_PATH = "./input/stream.jsonl";
+
     public static void main(final String[] args) {
-        KConsumer kConsumer = new KConsumer();
+        AppConfig kafkaConfig = new AppConfig(new ConfigReader());
+        KafkaConsumerClient kConsumer = new KafkaConsumerClient(kafkaConfig);
         kConsumer.processRecords();
 
-        KProducer kProducer = new KProducer();
+        KafkaProducerClient kProducer = new KafkaProducerClient(kafkaConfig);
         try (
             FileReader reader = new FileReader(INPUT_FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -28,6 +32,5 @@ public class Driver {
         } catch (final IOException ex) {
             ex.printStackTrace();
         }
-
     }
 }

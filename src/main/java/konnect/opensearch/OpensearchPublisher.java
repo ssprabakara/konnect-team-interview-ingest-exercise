@@ -1,8 +1,8 @@
 package konnect.opensearch;
 
-
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import konnect.config.AppConfig;
 import okhttp3.ConnectionPool;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -20,15 +20,22 @@ import java.util.concurrent.TimeUnit;
 
 public class OpensearchPublisher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OpensearchPublisher.class);
-    private static final String REQUEST_URL = "http://localhost:9200/cdc-events/_doc/";
-    private static final String BULK_API_REQUEST_URL = "http://localhost:9200/cdc-events/_bulk/";
-    private static final String INDEX_NAME = "cdc-events";
-    private static final String BULK_API_CREATE_JSON = "{ \"create\": { \"_index\": " + "\"" + INDEX_NAME + "\"" + " } }";
+    private final AppConfig appConfig;
     private final OkHttpClient httpClient;
+    private final String bulkPostRequestUrl;
+    private final String indexName;
+    private final String postRequestUrl;
 
-    public OpensearchPublisher() {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpensearchPublisher.class);
+    private static final String BULK_API_CREATE_JSON = "{ \"create\": { \"_index\": " + "\"" + "%s" + "\"" + " } }";
+    private static final String HTTP_MEDIA_TYPE = "application/json";
+
+    public OpensearchPublisher(final AppConfig appConfig) {
+        this.appConfig = appConfig;
+        bulkPostRequestUrl = appConfig.getBulkPostRequestUrl();
         httpClient = buildHttpClient();
+        indexName = appConfig.getIndexName();
+        postRequestUrl = appConfig.getPostRequestUrl();
     }
 
     public void publish(final String value) throws IOException {
@@ -44,7 +51,7 @@ public class OpensearchPublisher {
         StringBuilder sb = new StringBuilder();
 
         for (final String event: events) {
-            sb.append(BULK_API_CREATE_JSON);
+            sb.append(String.format(BULK_API_CREATE_JSON, indexName));
             sb.append("\n");
             sb.append(event);
             sb.append("\n");
@@ -55,11 +62,12 @@ public class OpensearchPublisher {
 
     private OkHttpClient buildHttpClient() {
         return new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(appConfig.getConnectTimeoutInSeconds(), TimeUnit.SECONDS)
+                .writeTimeout(appConfig.getWriteTimeout(), TimeUnit.SECONDS)
+                .readTimeout(appConfig.getReadTimeout(), TimeUnit.SECONDS)
                 .protocols(Collections.singletonList(Protocol.HTTP_1_1))
-                .connectionPool(new ConnectionPool(50, 30, TimeUnit.MINUTES))
+                .connectionPool(new ConnectionPool(appConfig.getMaxIdleConnections(),
+                        appConfig.getKeepAliveDurationInMinutes(), TimeUnit.MINUTES))
                 .build();
     }
 
@@ -82,9 +90,9 @@ public class OpensearchPublisher {
 
     private Request.Builder buildHttpRequest(final String requestBody) {
 
-        HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(REQUEST_URL).newBuilder();
+        HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(postRequestUrl).newBuilder();
         RequestBody body = RequestBody.create(requestBody.getBytes(StandardCharsets.UTF_8),
-                MediaType.parse("application/json"));
+                MediaType.parse(HTTP_MEDIA_TYPE));
 
         return new Request.Builder()
                 .url(httpUrlBuilder.build())
@@ -93,9 +101,9 @@ public class OpensearchPublisher {
 
     private Request.Builder buildBulkHttpRequest(final String requestBody) {
 
-        HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(BULK_API_REQUEST_URL).newBuilder();
+        HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(bulkPostRequestUrl).newBuilder();
         RequestBody body = RequestBody.create(requestBody.getBytes(StandardCharsets.UTF_8),
-                MediaType.parse("application/json"));
+                MediaType.parse(HTTP_MEDIA_TYPE));
 
         return new Request.Builder()
                 .url(httpUrlBuilder.build())

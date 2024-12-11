@@ -136,7 +136,7 @@
 
         <!-- Checks the Javadoc of a method or constructor. -->
         <module name="JavadocMethod">
-            <property name="scope" value="protected"/>
+            <property name="accessModifiers" value="public"/>
             <property name="severity" value="ignore"/>
         </module>
 

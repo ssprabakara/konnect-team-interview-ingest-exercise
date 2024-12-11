@@ -18,29 +18,28 @@
         <jackson-databind.version>2.18.2</jackson-databind.version>
         <!-- unit test coverage (85%) -->
         <jacoco.coverage>0.85</jacoco.coverage>
-        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <java.target.version>17</java.target.version>
         <junit.version>4.13.2</junit.version>
-        <kafka-clients.version>3.7.0</kafka-clients.version>
-        <kafka-json-serializer.version>4.1.1</kafka-json-serializer.version>
-        <logback-classic.version>1.2.9</logback-classic.version>
-        <lombok.version>1.18.22</lombok.version>
-        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
-        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <kafka-clients.version>3.7.1</kafka-clients.version>
+        <kafka-json-serializer.version>7.8.0</kafka-json-serializer.version>
+        <logback-classic.version>1.5.12</logback-classic.version>
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <mockito-core.version>4.2.0</mockito-core.version>
         <okhttp.version>4.10.0</okhttp.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sl4j-api.version>1.7.32</sl4j-api.version>
-        <spotbugs-maven-plugin.version>4.8.6.4</spotbugs-maven-plugin.version>
+        <sl4j-api.version>2.0.16</sl4j-api.version>
+        <spotbugs-maven-plugin.version>4.8.6.6</spotbugs-maven-plugin.version>
         <system-rules.version>1.19.0</system-rules.version>
-        <testng.version>7.4.0</testng.version>
+        <testng.version>7.10.2</testng.version>
     </properties>
 
     <dependencies>
@@ -94,12 +93,6 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>connect-json</artifactId>
             <version>${kafka-clients.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -197,6 +190,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
+                    <allowMissingPropertyJavadoc>true</allowMissingPropertyJavadoc>
                     <consoleOutput>true</consoleOutput>
                     <encoding>UTF-8</encoding>
                     <failsOnError>false</failsOnError>
@@ -238,7 +232,7 @@
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
                     <doclint>none</doclint>
-                    <source>11</source>
+                    <source>17</source>
                 </configuration>
                 <executions>
                     <execution>
