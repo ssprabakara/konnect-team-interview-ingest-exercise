@@ -7,7 +7,7 @@ public class Constants {
     }
 
     // Kafka
-    public static final String KAFKA_TOPIC_TOPIC_NAME = "kafka.topicName";
+    public static final String KAFKA_TOPIC_TOPIC_NAME = "kafkaTopic.topicName";
 
     // Kafka Consumer
     public static final String KAFKA_CONSUMER_ALLOW_AUTO_CREATE_TOPICS = "kafkaConsumer.allowAutoCreateTopics";
@@ -47,11 +47,11 @@ public class Constants {
     public static final String KAFKA_PRODUCER_VALUE_SERIALIZER = "kafkaProducer.valueSerializer";
 
     // httpClient
-    public static final String HTTPCLIENT_CONNECT_TIMEOUT = "okHttpClient.connectTimeout";
-    public static final String HTTPCLIENT_KEEP_ALIVE_DURATION = "okhttpClient.keepAliveDuration";
-    public static final String HTTPCLIENT_MAX_IDLE_CONNECTIONS = "okhttpClient.maxIdleConnections";
-    public static final String HTTPCLIENT_READ_TIMEOUT = "okhttpClient.readTimeout";
-    public static final String HTTPCLIENT_WRITE_TIMEOUT = "okhttpClient.writeTimeout";
+    public static final String HTTPCLIENT_CONNECT_TIMEOUT = "httpClient.connectTimeout";
+    public static final String HTTPCLIENT_KEEP_ALIVE_DURATION = "httpClient.keepAliveDuration";
+    public static final String HTTPCLIENT_MAX_IDLE_CONNECTIONS = "httpClient.maxIdleConnections";
+    public static final String HTTPCLIENT_READ_TIMEOUT = "httpClient.readTimeout";
+    public static final String HTTPCLIENT_WRITE_TIMEOUT = "httpClient.writeTimeout";
 
     // Opensearch
     public static final String OPENSEARCH_BULK_POST_REQUEST_URL = "opensearch.bulkPostRequestUrl";

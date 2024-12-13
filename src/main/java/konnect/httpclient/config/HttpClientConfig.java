@@ -1,4 +1,4 @@
-package konnect.config;
+package konnect.httpclient.config;
 
 public interface HttpClientConfig {
 

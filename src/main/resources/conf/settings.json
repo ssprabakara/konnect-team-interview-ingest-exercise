@@ -16,9 +16,9 @@
     "autoOffsetReset": "earliest",
     "bootstrapServers": ["localhost:9092"],
     "groupId": "cdc-events-consumer",
-    "keyDeserializer": "org.apache.kafka.common.serialization.StringSerializer",
+    "keyDeserializer": "org.apache.kafka.common.serialization.StringDeserializer",
     "maxPollRecords": 500,
-    "valueDeserializer": "org.apache.kafka.common.serialization.StringSerializer"
+    "valueDeserializer": "org.apache.kafka.common.serialization.StringDeserializer"
   },
   "httpClient": {
     "connectTimeout": 10,

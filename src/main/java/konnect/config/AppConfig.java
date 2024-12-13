@@ -3,6 +3,7 @@ package konnect.config;
 import java.util.Collections;
 import java.util.List;
 import konnect.exception.ConfigNotFoundException;
+import konnect.httpclient.config.HttpClientConfig;
 import konnect.kafka.config.KafkaConsumerConfig;
 import konnect.kafka.config.KafkaProducerConfig;
 import konnect.kafka.config.KafkaTopicConfig;

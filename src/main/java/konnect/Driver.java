@@ -3,8 +3,8 @@ package konnect;
 import com.fasterxml.jackson.databind.JsonNode;
 import konnect.config.ConfigReader;
 import konnect.config.AppConfig;
-import konnect.kafka.consumer.KafkaConsumerClient;
-import konnect.kafka.producer.KafkaProducerClient;
+import konnect.kafka.consumer.KafkaConsumerClientImpl;
+import konnect.kafka.producer.KafkaProducerClientImpl;
 import konnect.util.Utils;
 
 import java.io.BufferedReader;
@@ -16,10 +16,10 @@ public class Driver {
 
     public static void main(final String[] args) {
         AppConfig kafkaConfig = new AppConfig(new ConfigReader());
-        KafkaConsumerClient kConsumer = new KafkaConsumerClient(kafkaConfig);
+        KafkaConsumerClientImpl kConsumer = new KafkaConsumerClientImpl(kafkaConfig);
         kConsumer.processRecords();
 
-        KafkaProducerClient kProducer = new KafkaProducerClient(kafkaConfig);
+        KafkaProducerClientImpl kProducer = new KafkaProducerClientImpl(kafkaConfig);
         try (
             FileReader reader = new FileReader(INPUT_FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -27,7 +27,7 @@ public class Driver {
             String currentLine;
             while ((currentLine = bufferedReader.readLine()) != null) {
                 JsonNode jsonNode = Utils.OBJECT_MAPPER.readTree(currentLine);
-                kProducer.sendDataASync(jsonNode);
+                kProducer.sendDataAsync(jsonNode);
             }
         } catch (final IOException ex) {
             ex.printStackTrace();
