@@ -28,11 +28,11 @@ public interface KafkaProducerConfig {
      * Note that enabling idempotence requires this config value to be 'all'. If conflicting configurations are set and
      * idempotence is not explicitly enabled, idempotence is disabled.
      *
-     * @return String
-     *
      * Importance: Low
+     *
+     * @return String
      **/
-    default String getAcks() {
+    default String getKafkaProducerAcks() {
         return DEFAULT_ACK;
     }
 
@@ -56,11 +56,11 @@ public interface KafkaProducerConfig {
      * This `linger.ms` setting defaults to 0, which means we'll immediately send out a record even the accumulated
      * batch size is under this `batch.size` setting.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getBatchSize() {
+    default int getKafkaProducerBatchSize() {
         return 16384;
     }
 
@@ -75,11 +75,11 @@ public interface KafkaProducerConfig {
      * not all memory the producer uses is used for buffering. Some additional memory will be used for compression
      * (if compression is enabled) as well as for maintaining in-flight requests.
      *
-     * @return long
-     *
      * Importance: High
+     *
+     * @return long
      */
-    default long getBufferMemory() {
+    default long getKafkaProducerBufferMemory() {
         return 33554432L;
     }
 
@@ -88,11 +88,11 @@ public interface KafkaProducerConfig {
      *
      * Close idle connections after the number of milliseconds specified by this config.
      *
-     * @return long
-     *
      * Importance: Medium
+     *
+     * @return long
      */
-    default long getConnectionsMaxIdleInMs() {
+    default long getKafkaProducerConnectionsMaxIdleInMs() {
         return 540000L; // 9 minutes
     }
 
@@ -106,11 +106,11 @@ public interface KafkaProducerConfig {
      * or the record is added to a batch which reached an earlier delivery expiration deadline. The value of this config
      * should be greater than or equal to the sum of `request.timeout.ms` and `linger.ms`.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getDeliveryTimeoutInMs() {
+    default int getKafkaProducerDeliveryTimeoutInMs() {
         return 120000; // 2 minutes
     }
 
@@ -127,11 +127,11 @@ public interface KafkaProducerConfig {
      * set and idempotence is not explicitly enabled, idempotence is disabled. If idempotence is explicitly enabled
      * and conflicting configurations are set, a ConfigException is thrown.
      *
-     * @return boolean
-     *
      * Importance: Low
+     *
+     * @return boolean
      **/
-    default boolean getEnableIdempotence() {
+    default boolean getKafkaProducerEnableIdempotence() {
         return true;
     }
 
@@ -140,11 +140,11 @@ public interface KafkaProducerConfig {
      *
      * Serializer class for key that implements the `org.apache.kafka.common.serialization.Serializer` interface.
      *
-     * @return String
-     *
      * Importance: High
+     *
+     * @return String
      */
-    default String getKeySerializer() {
+    default String getKafkaProducerKeySerializer() {
         return STRING_SERIALIZER;
     }
 
@@ -163,11 +163,11 @@ public interface KafkaProducerConfig {
      * 0 (i.e. no delay). Setting `linger.ms=5`, for example, would have the effect of reducing the number of requests
      * sent but would add up to 5ms of latency to records sent in the absence of load.
      *
-     * @return long
-     *
      * Importance: Medium
+     *
+     * @return long
      */
-    default long getLingerInMs() {
+    default long getKafkaProducerLingerInMs() {
         return 0L;
     }
 
@@ -181,11 +181,11 @@ public interface KafkaProducerConfig {
      * bounds the time spent waiting for metadata if it is unavailable. The transaction-related methods always block,
      * but may timeout if the transaction coordinator could not be discovered or did not respond within the timeout.
      *
-     * @return long
-     *
      * Importance: Medium
+     *
+     * @return long
      */
-    default long getMaxBlockInMs() {
+    default long getKafkaProducerMaxBlockInMs() {
         return 60000L; // 1 minute
     }
 
@@ -199,11 +199,11 @@ public interface KafkaProducerConfig {
      * the value of this configuration to be less than or equal to 5. If conflicting configurations are set and
      * idempotence is not explicitly enabled, idempotence is disabled.
      *
-     * @return int
-     *
      * Importance: Low
+     *
+     * @return int
      **/
-    default int getMaxInFlightRequestsPerConnection() {
+    default int getKafkaProducerMaxInFlightRequestsPerConnection() {
         return 5;
     }
 
@@ -216,11 +216,11 @@ public interface KafkaProducerConfig {
      * to contain the entire set of brokers, as Kafka clients automatically manage and update connections to the cluster
      * efficiently. This list must be in the form host1:port1,host2:port2,....
      *
-     * @return `List<String>`
-     *
      * Importance: High
+     *
+     * @return `List<String>`
      */
-    List<String> getProducerBootstrapServers();
+    List<String> getKafkaProducerBootstrapServers();
 
     /**
      * Property: `request.timeout.ms`
@@ -230,11 +230,11 @@ public interface KafkaProducerConfig {
      * request if retries are exhausted. This should be larger than replica.lag.time.max.ms (a broker configuration)
      * to reduce the possibility of message duplication due to unnecessary producer retries.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getProducerRequestTimeoutInMs() {
+    default int getKafkaProducerRequestTimeoutInMs() {
         return 30000; // 30 seconds
     }
 
@@ -244,11 +244,11 @@ public interface KafkaProducerConfig {
      * The size of the TCP send buffer (SO_SNDBUF) to use when sending data. If the value is -1, the OS default
      * will be used.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getProducerSendBufferBytes() {
+    default int getKafkaProducerSendBufferBytes() {
         return 131072; // 128KB
     }
 
@@ -258,11 +258,11 @@ public interface KafkaProducerConfig {
      * The size of the TCP receive buffer (SO_RCVBUF) to use when reading data. If the value is -1, the OS default
      * will be used.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getProducerReceiveBufferBytes() {
+    default int getKafkaProducerReceiveBufferBytes() {
         return 32768; // 32KB
     }
 
@@ -286,7 +286,7 @@ public interface KafkaProducerConfig {
      *
      * @return int
      */
-    default int getRetries() {
+    default int getKafkaProducerRetries() {
         return 2147483647;
     }
 
@@ -295,11 +295,11 @@ public interface KafkaProducerConfig {
      *
      * Serializer class for value that implements the `org.apache.kafka.common.serialization.Serializer` interface.
      *
-     * @return String
-     *
      * Importance: High
+     *
+     * @return String
      */
-    default String getValueSerializer() {
+    default String getKafkaProducerValueSerializer() {
         return STRING_SERIALIZER;
     }
 

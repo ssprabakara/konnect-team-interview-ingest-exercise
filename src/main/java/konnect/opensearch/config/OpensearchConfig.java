@@ -8,22 +8,23 @@ public interface OpensearchConfig {
     /**
      *
      */
-    default String getIndexName() {
+    default String getOpensearchBulkPostRequestUrl() {
+        return BULK_POST_REQUEST_URL;
+    }
+
+
+    /**
+     *
+     */
+    default String getOpensearchIndexName() {
         return DEFAULT_INDEX_NAME;
     }
 
     /**
      *
      */
-    default String getPostRequestUrl() {
+    default String getOpensearchPostRequestUrl() {
         return POST_REQEUST_URL;
-    }
-
-    /**
-     *
-     */
-    default String getBulkPostRequestUrl() {
-        return BULK_POST_REQUEST_URL;
     }
 
 }

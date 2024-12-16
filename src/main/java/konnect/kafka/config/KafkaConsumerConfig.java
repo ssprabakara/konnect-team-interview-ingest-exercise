@@ -14,11 +14,11 @@ public interface KafkaConsumerConfig {
      * to will be automatically created only if the broker allows for it using `auto.create.topics.enable` broker
      * configuration. This configuration must be set to `false` when using brokers older than 0.11.0
      *
-     * @return boolean
-     *
      * Importance: Medium
+     *
+     * @return the boolean value for allowing the consumer to auto create the topic
      */
-    boolean getAllowAutoCreateTopics();
+    boolean getKafkaConsumerAllowAutoCreateTopics();
 
     /**
      * Property: `receive.buffer.bytes`
@@ -26,11 +26,11 @@ public interface KafkaConsumerConfig {
      * The size of the TCP receive buffer (SO_RCVBUF) to use when reading data. If the value is -1, the OS default
      * will be used.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return the interger value for auto commit interval in milliseconds
      */
-    default int getAutoCommitIntervalInMs() {
+    default int getKafkaConsumerAutoCommitIntervalInMs() {
         return 5000; // 5 seconds
     }
 
@@ -49,11 +49,11 @@ public interface KafkaConsumerConfig {
      * producers could start to send messages to newly added partitions (i.e. no initial offsets exist yet) before
      * consumers reset their offsets.
      *
-     * @return String
-     *
      * Importance: Medium
+     *
+     * @return the default string value for the consumer auto offset reset behavior
      */
-    default String getAutoOffsetReset() {
+    default String getKafkaConsumerAutoOffsetReset() {
         return AUTO_OFFSET_RESET;
     }
 
@@ -62,11 +62,11 @@ public interface KafkaConsumerConfig {
      *
      * Close idle connections after the number of milliseconds specified by this config.
      *
-     * @return long
-     *
      * Importance: Medium
+     *
+     * @return the long value for the maximum number of millliseconds to wait before closing the idle connections
      */
-    default long getConnectionMaxIdleInMs() {
+    default long getKafkaConsumerConnectionMaxIdleInMs() {
         return 540000; // 9 minutes
     }
 
@@ -79,11 +79,11 @@ public interface KafkaConsumerConfig {
      * to contain the entire set of brokers, as Kafka clients automatically manage and update connections to the cluster
      * efficiently. This list must be in the form host1:port1,host2:port2,....
      *
-     * @return `List<String>`
-     *
      * Importance: High
+     *
+     * @return  the List of Strings of the bootstrap servers
      */
-    List<String> getConsumerBootstrapServers();
+    List<String> getKafkaConsumerBootstrapServers();
 
     /**
      * Property: `receive.buffer.bytes`
@@ -91,11 +91,11 @@ public interface KafkaConsumerConfig {
      * The size of the TCP receive buffer (SO_RCVBUF) to use when reading data. If the value is -1, the OS default
      * will be used.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getConsumerReceiveBufferBytes() {
+    default int getKafkaConsumerReceiveBufferBytes() {
         return 65536; // 64KB
     }
 
@@ -107,11 +107,11 @@ public interface KafkaConsumerConfig {
      * request if retries are exhausted. This should be larger than replica.lag.time.max.ms (a broker configuration)
      * to reduce the possibility of message duplication due to unnecessary producer retries.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getConsumerRequestTimeoutInMs() {
+    default int getKafkaConsumerRequestTimeoutInMs() {
         return 30000; // 30 seconds
     }
 
@@ -121,11 +121,11 @@ public interface KafkaConsumerConfig {
      * The size of the TCP send buffer (SO_SNDBUF) to use when sending data. If the value is -1, the OS default
      * will be used.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getConsumerSendBufferBytes() {
+    default int getKafkaConsumerSendBufferBytes() {
         return 131072; // 128KB
     }
 
@@ -134,11 +134,11 @@ public interface KafkaConsumerConfig {
      *
      * If true the consumer's offset will be periodically committed in the background.
      *
-     * @return boolean
-     *
      * Importance: Medium
+     *
+     * @return boolean
      */
-    default boolean getEnableAutoCommit() {
+    default boolean getKafkaConsumerEnableAutoCommit() {
         return true;
     }
 
@@ -149,11 +149,11 @@ public interface KafkaConsumerConfig {
      * consumer uses either the group management functionality by using `subscribe(topic)` or the Kafka-based offset
      * management strategy.
      *
-     * @return String
-     *
      * Importance: High
+     *
+     * @return String
      */
-    String getGroupId();
+    String getKafkaConsumerGroupId();
 
     /**
      * Property: `isolation.level`
@@ -171,16 +171,29 @@ public interface KafkaConsumerConfig {
      *
      * Further, when in `read_committed` the seekToEnd method will return the LSO
      *
-     * @return String
-     *
      * Importance: Medium
+     *
+     * @return String
      */
-    default String getIsolationLevel() {
+    default String getKafkaConsumerIsolationLevel() {
         return DEFAULT_ISOLATION_LEVEL;
     }
 
     /**
-     * Property: `max.poll.interval.ms`
+     * Property: `key.deserializer`
+     *
+     * Serializer class for key that implements the `org.apache.kafka.common.serialization.Deserializer` interface.
+     *
+     * Importance: High
+     *
+     * @return String
+     */
+    default String getKafkaConsumerKeyDeserializer() {
+        return STRING_DESERIALIZER;
+    }
+
+    /**
+     *  Property: `max.poll.interval.ms`
      *
      * The maximum delay between invocations of poll() when using consumer group management. This places an upper bound
      * on the amount of time that the consumer can be idle before fetching more records. If poll() is not called before
@@ -190,11 +203,11 @@ public interface KafkaConsumerConfig {
      * partitions will be reassigned after expiration of `session.timeout.ms`. This mirrors the behavior of a static
      * consumer which has shutdown.
      *
-     * @return int
+     * Importance: Medium
      *
-     * Importancd: Medium
+     * @return the default integer value of max interval for polling in ms
      */
-    default int getMaxPollIntervalInMs() {
+    default int getKafkaConsumerMaxPollIntervalInMs() {
         return 300000; // 5 minutes
     }
 
@@ -205,25 +218,21 @@ public interface KafkaConsumerConfig {
      * the underlying fetching behavior. The consumer will cache the records from each fetch request and returns them
      * incrementally from each poll.
      *
-     * @return int
-     *
      * Importance: Medium
+     *
+     * @return int
      */
-    default int getMaxPollRecords() {
+    default int getKafkaConsumerMaxPollRecords() {
         return 500;
     }
 
     /**
-     * Property: `key.deserializer`
+     * The delay between invocations of poll() when using consumer group management.
      *
-     * Serializer class for key that implements the `org.apache.kafka.common.serialization.Deserializer` interface.
-     *
-     * @return String
-     *
-     * Importance: High
+     * @return int
      */
-    default String getKeyDeserializer() {
-        return STRING_DESERIALIZER;
+    default int getKafkaConsumerPollIntervalInMs() {
+        return 100;
     }
 
     /**
@@ -235,11 +244,11 @@ public interface KafkaConsumerConfig {
      * a re-balance. Note that the value must be in the allowable range as configured in the broker configuration by
      * `group.min.session.timeout.ms` and `group.max.session.timeout.ms`
      *
-     * @return int
-     *
      * Importance: High
+     *
+     * @return int
      */
-    default int getSessionTimeoutInMs() {
+    default int getKafkaConsumerSessionTimeoutInMs() {
         return 45000; // 45 seconds
     }
 
@@ -248,11 +257,11 @@ public interface KafkaConsumerConfig {
      *
      * Serializer class for value that implements the `org.apache.kafka.common.serialization.Deserializer` interface.
      *
-     * @return String
-     *
      * Importance: High
+     *
+     * @return String
      */
-    default String getValueDeserializer() {
+    default String getKafkaConsumerValueDeserializer() {
         return STRING_DESERIALIZER;
     }
 

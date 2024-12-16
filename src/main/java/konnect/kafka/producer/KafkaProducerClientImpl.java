@@ -15,7 +15,7 @@ import static org.apache.kafka.clients.producer.ProducerConfig.BATCH_SIZE_CONFIG
 
 public class KafkaProducerClientImpl implements KafkaProducerClient {
     Properties kafkaProps;
-    KafkaProducer<String, Object> producer; // Object generic ???
+    KafkaProducer<String, Object> kafkaProducer;
 
     private final AppConfig kafkaConfig;
     private final String kafkaTopic;
@@ -26,30 +26,24 @@ public class KafkaProducerClientImpl implements KafkaProducerClient {
 
     public KafkaProducerClientImpl(final AppConfig kafkaConfig) {
         this.kafkaConfig = kafkaConfig;
-        this.kafkaTopic = kafkaConfig.getTopicName();
+        this.kafkaTopic = kafkaConfig.getKafkaTopicName();
         setProperties();
-        buildProducer();
+        this.kafkaProducer = new KafkaProducer<>(kafkaProps);
     }
 
     private void setProperties() {
         kafkaProps = new Properties();
-        kafkaProps.put(BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getProducerBootstrapServers());
-        kafkaProps.put(KEY_SERIALIZER_CLASS_CONFIG, kafkaConfig.getKeySerializer());
-        kafkaProps.put(VALUE_SERIALIZER_CLASS_CONFIG, kafkaConfig.getValueSerializer());
-        kafkaProps.put(BATCH_SIZE_CONFIG, kafkaConfig.getBatchSize());
-    }
-
-    private void buildProducer() {
-        producer = new KafkaProducer<>(kafkaProps);
+        kafkaProps.put(BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getKafkaProducerBootstrapServers());
+        kafkaProps.put(KEY_SERIALIZER_CLASS_CONFIG, kafkaConfig.getKafkaProducerKeySerializer());
+        kafkaProps.put(VALUE_SERIALIZER_CLASS_CONFIG, kafkaConfig.getKafkaProducerValueSerializer());
+        kafkaProps.put(BATCH_SIZE_CONFIG, kafkaConfig.getKafkaProducerBatchSize());
     }
 
     @Override
     public void sendDataSync(final Object value) {
-        ProducerRecord<String, Object> event =
-                new ProducerRecord<>(kafkaTopic, null, value);
+        ProducerRecord<String, Object> event = new ProducerRecord<>(kafkaTopic, null, value);
         try {
-            producer = new KafkaProducer<>(kafkaProps);
-            producer.send(event).get();
+            kafkaProducer.send(event).get();
         } catch (final Exception ex) {
             LOGGER.error(KAFKA_ERROR_RECORD_STR_TEMPLATE,
                     "null",
@@ -61,10 +55,9 @@ public class KafkaProducerClientImpl implements KafkaProducerClient {
 
     @Override
     public void sendDataAsync(final Object value) {
-        ProducerRecord<String, Object> event =
-                new ProducerRecord<>(kafkaTopic, null, value);
+        ProducerRecord<String, Object> event = new ProducerRecord<>(kafkaTopic, null, value);
         try {
-            producer.send(event, new KafkaProducerCallback(null, value.toString()));
+            kafkaProducer.send(event, new KafkaProducerCallback(null, value.toString()));
         } catch (final Exception ex) {
             LOGGER.error(KAFKA_ERROR_RECORD_STR_TEMPLATE,
                     "null",
@@ -73,14 +66,12 @@ public class KafkaProducerClientImpl implements KafkaProducerClient {
         }
     }
 
-    // fire and forget style
     @Override
     public void sendData(final Object value) {
-        ProducerRecord<String, Object> event =
-                new ProducerRecord<>(kafkaTopic, null, value);
+        ProducerRecord<String, Object> event = new ProducerRecord<>(kafkaTopic, null, value);
         try {
-            producer.send(event);
-            producer.flush();
+            kafkaProducer.send(event);
+            kafkaProducer.flush();
         } catch (final Exception ex) {
             LOGGER.error(KAFKA_ERROR_RECORD_STR_TEMPLATE,
                     "null",

@@ -1,0 +1,4 @@
+{ "create": { "_index": "cdc-events", "_id": "1" } }
+{"before": null, "after": {"key": "c/04397908-e846-4019-aeaa-2422a1cb7b6c/o/store_event/last_update", "value": {"type": 3, "object": {"id": "c/04397908-e846-4019-aeaa-2422a1cb7b6c/last_update", "value": "9c341d3d-1a20-4d72-b95c-3dddb08c6602", "resource_type": "key"}}}, "op": "u", "ts_ms": 1706812604828}
+{ "create": { "_index": "cdc-events", "_id": "2" } }
+{"before": null, "after": {"key": "c/04397908-e846-4019-aeaa-2422a1cb7b6c/o/store_event/last_update", "value": {"type": 3, "object": {"id": "c/04397908-e846-4019-aeaa-2422a1cb7b6c/last_update", "value": "eaffa699-f3ab-46e1-8eed-d9f1e194ffc4", "resource_type": "route"}}}, "op": "u", "ts_ms": 1706812644903

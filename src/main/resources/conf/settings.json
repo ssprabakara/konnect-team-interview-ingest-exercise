@@ -2,6 +2,13 @@
   "settings": [
     "master"
   ],
+  "httpClient": {
+    "connectTimeout": 10,
+    "keepAliveDuration": 30,
+    "maxIdleConnections": 50,
+    "readTimeout": 30,
+    "writeTimeout": 10
+  },
   "kafkaTopic": {
     "topicName": "cdc-events"
   },
@@ -18,18 +25,19 @@
     "groupId": "cdc-events-consumer",
     "keyDeserializer": "org.apache.kafka.common.serialization.StringDeserializer",
     "maxPollRecords": 500,
+    "pollIntervalInMs": 100,
     "valueDeserializer": "org.apache.kafka.common.serialization.StringDeserializer"
-  },
-  "httpClient": {
-    "connectTimeout": 10,
-    "keepAliveDuration": 30,
-    "maxIdleConnections": 50,
-    "readTimeout": 30,
-    "writeTimeout": 10
   },
   "opensearch": {
     "indexName": "cdc-events",
     "postRequestUrl": "http://localhost:9200/cdc-events/_doc/",
     "bulkPostRequestUrl": "http://localhost:9200/cdc-events/_bulk/"
+  },
+  "opensearchRestClient": {
+    "host": "localhost",
+    "port": 9200,
+    "httpScheme": "http",
+    "connectTimeout": 10,
+    "maxRetry": 3
   }
 }

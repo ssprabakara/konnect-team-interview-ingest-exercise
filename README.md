@@ -12,6 +12,8 @@ Below are the tasks we want you to complete.
 * develop a program that ingests the sample cdc events into a Kafka topic
 * develop a program that persists the data from Kafka into Opensearch
 
+# Solution
+The instruction for verifying the solution can be found in `README.txt` file
 
 ## Get started
 

@@ -1,0 +1,54 @@
+{
+  "took": 76,
+  "errors": false,
+  "items": [
+    {
+      "create": {
+        "_index": "cdc-events",
+        "_id": "-g9p1JMBIE2VTMQpbupq",
+        "_version": 1,
+        "result": "created",
+        "_shards": {
+          "total": 2,
+          "successful": 1,
+          "failed": 0
+        },
+        "_seq_no": 42659,
+        "_primary_term": 143,
+        "status": 201
+      }
+    },
+    {
+      "create": {
+        "_index": "cdc-events",
+        "_id": "-w9p1JMBIE2VTMQpbupq",
+        "_version": 1,
+        "result": "created",
+        "_shards": {
+          "total": 2,
+          "successful": 1,
+          "failed": 0
+        },
+        "_seq_no": 42660,
+        "_primary_term": 143,
+        "status": 201
+      }
+    },
+    {
+      "create": {
+        "_index": "cdc-events",
+        "_id": "_A9p1JMBIE2VTMQpbupq",
+        "_version": 1,
+        "result": "created",
+        "_shards": {
+          "total": 2,
+          "successful": 1,
+          "failed": 0
+        },
+        "_seq_no": 42661,
+        "_primary_term": 143,
+        "status": 201
+      }
+    }
+  ]
+}

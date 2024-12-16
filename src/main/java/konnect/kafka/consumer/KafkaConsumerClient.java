@@ -1,5 +1,5 @@
 package konnect.kafka.consumer;
 
 public interface KafkaConsumerClient {
-    void processRecords();
+    void processEvents();
 }

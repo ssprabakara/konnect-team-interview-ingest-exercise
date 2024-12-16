@@ -6,6 +6,13 @@ public class Constants {
 
     }
 
+    // HTTP Client
+    public static final String HTTP_CLIENT_CONNECT_TIMEOUT = "httpClient.connectTimeout";
+    public static final String HTTP_CLIENT_KEEP_ALIVE_DURATION = "httpClient.keepAliveDuration";
+    public static final String HTTP_CLIENT_MAX_IDLE_CONNECTIONS = "httpClient.maxIdleConnections";
+    public static final String HTTP_CLIENT_READ_TIMEOUT = "httpClient.readTimeout";
+    public static final String HTTP_CLIENT_WRITE_TIMEOUT = "httpClient.writeTimeout";
+
     // Kafka
     public static final String KAFKA_TOPIC_TOPIC_NAME = "kafkaTopic.topicName";
 
@@ -21,6 +28,7 @@ public class Constants {
     public static final String KAFKA_CONSUMER_KEY_DESERIALIZER = "kafkaConsumer.keyDeserializer";
     public static final String KAFKA_CONSUMER_MAX_POLL_RECORDS = "kafkaConsumer.maxPollRecords";
     public static final String KAFKA_CONSUMER_MAX_POLL_INTERVAL_IN_MS = "kafkaConsumer.maxPollIntervalInMs";
+    public static final String KAFKA_CONSUMER_POLL_INTERVAL_IN_MS = "kafkaConsumer.pollIntervalInMs";
     public static final String KAFKA_CONSUMER_RECEIVER_BUFFER_BYTES = "kafkaConsumer.receiverBufferBytes";
     public static final String KAFKA_CONSUMER_REQUEST_TIMEOUT_IN_MS = "kafkaConsumer.requestTimeoutInMs";
     public static final String KAFKA_CONSUMER_SEND_BUFFER_BYTES = "kafkaConsumer.sendBufferBytes";
@@ -46,12 +54,12 @@ public class Constants {
     public static final String KAFKA_PRODUCER_SEND_BUFFER_BYTES = "kafkaProducer.sendBufferBytes";
     public static final String KAFKA_PRODUCER_VALUE_SERIALIZER = "kafkaProducer.valueSerializer";
 
-    // httpClient
-    public static final String HTTPCLIENT_CONNECT_TIMEOUT = "httpClient.connectTimeout";
-    public static final String HTTPCLIENT_KEEP_ALIVE_DURATION = "httpClient.keepAliveDuration";
-    public static final String HTTPCLIENT_MAX_IDLE_CONNECTIONS = "httpClient.maxIdleConnections";
-    public static final String HTTPCLIENT_READ_TIMEOUT = "httpClient.readTimeout";
-    public static final String HTTPCLIENT_WRITE_TIMEOUT = "httpClient.writeTimeout";
+    // Opensearch REST Client
+    public static final String OPENSEARCH_REST_CLIENT_CONNECT_TIMEOUT = "opensearchRestClient.connectTimeout";
+    public static final String OPENSEARCH_REST_CLIENT_HOST = "opensearchRestClient.host";
+    public static final String OPENSEARCH_REST_CLIENT_HTTP_SCHEME = "opensearchRestClient.httpScheme";
+    public static final String OPENSEARCH_REST_CLIENT_PORT = "opensearchRestClient.port";
+    public static final String OPENSEARCH_REST_CLIENT_MAX_RETRY = "opensearchRestClient.maxRetry";
 
     // Opensearch
     public static final String OPENSEARCH_BULK_POST_REQUEST_URL = "opensearch.bulkPostRequestUrl";
